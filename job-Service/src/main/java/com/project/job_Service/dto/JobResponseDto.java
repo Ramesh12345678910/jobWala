@@ -15,4 +15,5 @@ public class JobResponseDto {
     private String description;
     private LocalDate lastDateToApply;
     private Integer employerId;
+    private Integer experienceRequired;
 }

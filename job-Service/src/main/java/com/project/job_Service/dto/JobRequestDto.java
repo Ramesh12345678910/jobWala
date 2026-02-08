@@ -24,8 +24,11 @@ public class JobRequestDto {
     private String description;
     @FutureOrPresent
     private LocalDate lastDateToApply;
-    @NotNull(message="employee_id must be null")
-    @Min(value=1,message="employee_id must not be zero or less")
-    private Integer employerId;
+    @Min(value=0,message = "No negitive experience allowed")
+    @Max(value=60,message = "experience must not exceed mre than 60")
+    private Integer experienceRequired;
+//    @NotNull(message="employee_id must be null")
+//    @Min(value=1,message="employee_id must not be zero or less")
+//    private Integer employerId;
 
 }

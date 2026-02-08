@@ -1,5 +1,6 @@
 package com.project.profile_Service.service;
 
+
 import com.project.profile_Service.client.UserClient;
 import com.project.profile_Service.dto.ProfileRequestDto;
 import com.project.profile_Service.dto.ProfileResponseDto;
@@ -19,13 +20,13 @@ public class ProfileServiceImpl implements ProfileService {
     @Autowired
     private ProfileRepository profileRepository;
 
-    @Autowired
+   @Autowired
     private UserClient userClient;
 
     @Override
     public ProfileResponseDto createProfile(Integer userId, ProfileRequestDto dto) {
 
-        Boolean exists = userClient.isUserExists(userId);
+       Boolean exists = userClient.isUserExists(userId);
         if (!exists) {
             throw new UserNotFoundException("User does not exist");
         }

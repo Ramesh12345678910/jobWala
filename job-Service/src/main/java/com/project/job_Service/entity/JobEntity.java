@@ -18,16 +18,21 @@ public class JobEntity {
     private LocalDate lastDateToApply;
     @Column(nullable = false)
     private Integer employerId;
+    @Column
+    private Integer experienceRequired;
 
     public JobEntity() {
     }
 
-    public JobEntity(String title, String description, LocalDate lastDateToApply, Integer employerId) {
+    public JobEntity(String title, String description, LocalDate lastDateToApply, Integer employerId,Integer experienceRequired) {
         this.title = title;
         this.description = description;
         this.lastDateToApply = lastDateToApply;
         this.employerId = employerId;
+        this.experienceRequired=experienceRequired;
     }
+
+
 
     public Integer getJobId() {
         return jobId;
@@ -67,5 +72,13 @@ public class JobEntity {
 
     public void setEmployer_id(Integer employerId) {
         this.employerId = employerId;
+    }
+
+    public Integer getExperienceRequired() {
+        return experienceRequired;
+    }
+
+    public void setExperienceRequired(Integer experienceRequired) {
+        this.experienceRequired = experienceRequired;
     }
 }

@@ -20,4 +20,5 @@ public class JobDto {
     private Integer employerId;
     @FutureOrPresent(message="No past date is allowed")
     private LocalDate lastDateToApply;
+    private Integer experienceRequired;
 }

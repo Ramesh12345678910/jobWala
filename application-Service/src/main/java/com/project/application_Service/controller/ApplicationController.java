@@ -21,9 +21,9 @@ public class ApplicationController {
     @PostMapping("/candidate/{candidateId}/job/{jobId}")
     public ResponseEntity<ApplicationResponseDto> applyForJob(@PathVariable @Min(value=1,
             message="candidateId must not be 0 or less") Integer candidateId
-            , @PathVariable @Min(value=1,message="userId must not be 0 or less") Integer userId
-    , @RequestBody @Valid ApplicationRequestDto applicationRequestDto){
-        return new ResponseEntity<>(applicationService.applyForJob(candidateId, userId, applicationRequestDto), HttpStatus.CREATED);
+            , @PathVariable @Min(value=1,message="userId must not be 0 or less") Integer jobId
+    ){
+        return new ResponseEntity<>(applicationService.applyForJob(candidateId, jobId), HttpStatus.CREATED);
     }
 
     @GetMapping("/employer/{employerId}/job/{jobId}")
@@ -33,10 +33,14 @@ public class ApplicationController {
         return new ResponseEntity<>(applicationService.viewApplicationsByJob(employerId, jobId),HttpStatus.OK);
     }
 
-    @GetMapping("/employer/{employerId}/application/{applicationId}")
+    @PatchMapping("/employer/{employerId}/application/{applicationId}")
     public ResponseEntity<ApplicationResponseDto> updateApplicationStatus(@PathVariable @Min(value=1,
     message="employerId must not be 0 or less") Integer employerId,@PathVariable @Min(value=1
     ,message = "applicationId must not be 0 or less") Integer applicationId,@RequestBody ApplicationRequestDto applicationRequestDto){
         return new ResponseEntity<>(applicationService.updateApplicationStatus(employerId, applicationId, applicationRequestDto),HttpStatus.ACCEPTED);
+    }
+    @GetMapping("/candidate/{candidateId}")
+    public ResponseEntity<List<ApplicationResponseDto>> appliedJobs(@PathVariable Integer candidateId){
+        return new ResponseEntity<>(applicationService.viewAllAppliedJobs(candidateId),HttpStatus.OK);
     }
 }

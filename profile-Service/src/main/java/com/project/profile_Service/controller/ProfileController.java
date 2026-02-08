@@ -44,7 +44,7 @@ public class ProfileController {
     }
 
     @GetMapping("/getAll")
-    public List<ProfileResponseDto> viewAllProfiles(){
-        return profileService.viewAllProfiles();
+    public ResponseEntity<List<ProfileResponseDto>> viewAllProfiles(){
+        return new ResponseEntity<>(profileService.viewAllProfiles(),HttpStatus.OK);
     }
 }

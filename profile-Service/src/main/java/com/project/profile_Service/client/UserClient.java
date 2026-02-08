@@ -4,8 +4,8 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-@FeignClient(name = "auth-Service")
+@FeignClient(name = "AUTH-SERVICE",configuration = FeignConfig.class)
 public interface UserClient {
-    @GetMapping("/auth/users/{userId}/exists")
+    @GetMapping("/user/{userId}/exists")
     Boolean isUserExists(@PathVariable Integer userId);
 }

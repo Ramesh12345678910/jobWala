@@ -15,5 +15,5 @@ public interface JobService {
     List<JobResponseDto> viewJob(Integer employerId);
     List<JobResponseDto> viewAllJobs();
     List<JobResponseDto> searchForJob(String title);
-
+    JobResponseDto getJobById(Integer jobId);
 }

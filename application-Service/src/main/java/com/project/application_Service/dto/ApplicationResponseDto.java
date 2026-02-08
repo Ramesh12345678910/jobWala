@@ -11,7 +11,9 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ApplicationResponseDto {
+
     private Integer applicationId;
+    private Integer employerId;
     private Integer jobId;
     private Integer candidateId;
     private LocalDate appliedDate;

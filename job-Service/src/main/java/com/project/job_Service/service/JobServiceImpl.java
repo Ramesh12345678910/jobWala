@@ -1,5 +1,6 @@
 package com.project.job_Service.service;
 
+
 import com.project.job_Service.client.AuthFeignClient;
 import com.project.job_Service.dto.JobRequestDto;
 import com.project.job_Service.dto.JobResponseDto;
@@ -35,6 +36,7 @@ public class JobServiceImpl implements JobService {
         job.setTitle(dto.getTitle());
         job.setDescription(dto.getDescription());
         job.setLastDateToApply(dto.getLastDateToApply());
+        job.setExperienceRequired(dto.getExperienceRequired());
 
         return mapToDto(jobRepository.save(job));
     }
@@ -53,6 +55,7 @@ public class JobServiceImpl implements JobService {
         job.setTitle(dto.getTitle());
         job.setDescription(dto.getDescription());
         job.setLastDateToApply(dto.getLastDateToApply());
+        job.setExperienceRequired(dto.getExperienceRequired());
 
         return mapToDto(jobRepository.save(job));
     }
@@ -104,6 +107,13 @@ public class JobServiceImpl implements JobService {
         return jobs;
     }
 
+    @Override
+    public JobResponseDto getJobById(Integer jobId) {
+        JobEntity job=jobRepository.findById(jobId).orElseThrow(()->
+                new JobNotFoundException("No job Found with this id"));
+        return mapToDto(job);
+    }
+
     private JobResponseDto mapToDto(JobEntity job) {
 
         JobResponseDto dto = new JobResponseDto();
@@ -112,6 +122,7 @@ public class JobServiceImpl implements JobService {
         dto.setDescription(job.getDescription());
         dto.setEmployerId(job.getEmployer_id());
         dto.setLastDateToApply(job.getLastDateToApply());
+        dto.setExperienceRequired(job.getExperienceRequired());
         return dto;
     }
 }

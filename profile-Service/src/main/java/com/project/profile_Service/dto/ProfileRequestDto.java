@@ -28,9 +28,9 @@ public class ProfileRequestDto {
             )
                     String
             > skills;
-    @NotNull(message = "user should not be null")
-    @Min(value = 1,message = "userId must not be zero or less")
-    private Integer userId;
+//    @NotNull(message = "user should not be null")
+//    @Min(value = 1,message = "userId must not be zero or less")
+//    private Integer userId;
 
 
 }

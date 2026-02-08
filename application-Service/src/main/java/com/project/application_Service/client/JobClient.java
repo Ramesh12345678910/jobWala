@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 @FeignClient(name = "job-Service")
 public interface JobClient {
 
-    @GetMapping("/jobs/{jobId}")
+    @GetMapping("/job/{jobId}")
     JobDto getJobById(@PathVariable Integer jobId);
 }
 

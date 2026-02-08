@@ -1,5 +1,6 @@
 package com.project.application_Service.service;
 
+
 import com.project.application_Service.client.AuthClient;
 import com.project.application_Service.client.JobClient;
 import com.project.application_Service.dto.ApplicationRequestDto;
@@ -26,11 +27,10 @@ public class ApplicationServiceImpl implements ApplicationService {
     @Override
     public ApplicationResponseDto applyForJob(
             Integer candidateId,
-            Integer jobId,
-            ApplicationRequestDto requestDto) {
+            Integer jobId) {
 
 
-        UserDto user = authClient.getUserById(candidateId);
+       UserDto user = authClient.getUserById(candidateId);
         if(user==null){
             throw new UserNotFoundException("userId is not found");
         }
@@ -49,7 +49,7 @@ public class ApplicationServiceImpl implements ApplicationService {
         application.setJobId(jobId);
         application.setApplicationStatus(ApplicationStatus.APPLIED);
         application.setAppliedDate(LocalDate.now());
-
+        application.setEmployerId(job.getEmployerId());
         applicationRepository.save(application);
         return mapToDto(application);
     }
@@ -126,6 +126,14 @@ public class ApplicationServiceImpl implements ApplicationService {
         dto.setCandidateId(application.getCandidateId());
         dto.setStatus(application.getApplicationStatus());
         dto.setAppliedDate(application.getAppliedDate());
+        dto.setEmployerId(application.getEmployerId());
         return dto;
+    }
+    @Override
+    public List<ApplicationResponseDto> viewAllAppliedJobs(Integer candidateId) {
+        return applicationRepository.findByCandidateId(candidateId)
+                .stream()
+                .map(this::mapToDto)
+                .toList();
     }
 }

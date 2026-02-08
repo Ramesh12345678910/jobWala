@@ -1,33 +1,40 @@
 package com.project.application_Service.model;
 
 import jakarta.persistence.*;
-
 import java.time.LocalDate;
 
 @Entity
-@Table(name="applicationTable")
+@Table(name = "application_table")
 public class ApplicationEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer applicationId;
-    @Column(nullable=false)
+
+    @Column(nullable = false)
+    private Integer employerId;
+
+    @Column(nullable = false)
     private Integer jobId;
-    @Column(nullable=false)
+
+    @Column(nullable = false)
     private Integer candidateId;
-    @Column(nullable=false)
+
+    @Column(nullable = false)
     private LocalDate appliedDate;
-    @Column
+
     @Enumerated(EnumType.STRING)
     private ApplicationStatus applicationStatus;
 
-    public ApplicationEntity(Integer jobId, Integer candidateId, LocalDate appliedDate, ApplicationStatus applicationStatus) {
+    public ApplicationEntity() {}
+
+    public ApplicationEntity(Integer employerId, Integer jobId, Integer candidateId,
+                             LocalDate appliedDate, ApplicationStatus applicationStatus) {
+        this.employerId = employerId;
         this.jobId = jobId;
         this.candidateId = candidateId;
         this.appliedDate = appliedDate;
         this.applicationStatus = applicationStatus;
-    }
-
-    public ApplicationEntity() {
     }
 
     public Integer getApplicationId() {
@@ -36,6 +43,14 @@ public class ApplicationEntity {
 
     public void setApplicationId(Integer applicationId) {
         this.applicationId = applicationId;
+    }
+
+    public Integer getEmployerId() {
+        return employerId;
+    }
+
+    public void setEmployerId(Integer employerId) {
+        this.employerId = employerId;
     }
 
     public Integer getJobId() {
@@ -69,4 +84,5 @@ public class ApplicationEntity {
     public void setApplicationStatus(ApplicationStatus applicationStatus) {
         this.applicationStatus = applicationStatus;
     }
+
 }
