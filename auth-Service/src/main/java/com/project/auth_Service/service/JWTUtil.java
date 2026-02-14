@@ -29,6 +29,8 @@ public class JWTUtil {
 
     public String generateToken(UserEntity user) {
         Map<String, Object> claims = new HashMap<>();
+        claims.put("userId", user.getUserId());
+        claims.put("role", user.getRole().name());
 
         return Jwts.builder()
                 .claims(claims)
