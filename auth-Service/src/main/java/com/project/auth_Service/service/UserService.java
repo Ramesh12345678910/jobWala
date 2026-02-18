@@ -16,5 +16,6 @@ public interface UserService {
     boolean existsById(Integer userId);
     Boolean isEmployer(Integer employerId);
     UserResponseDto getUserById(@Min(value=1,message="user Id must not  be 0 or less") Integer userId);
-    void changePrivilageToEmployer(Integer userId);
+    void changePrivilageRequest(Integer userId);
+    UserResponseDto updatePrivilage(Integer userId);
 }

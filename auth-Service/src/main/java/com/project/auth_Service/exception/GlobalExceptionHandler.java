@@ -2,10 +2,12 @@ package com.project.auth_Service.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import jakarta.validation.ConstraintViolationException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,9 +25,15 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> handlingMethodArgumentTypeMisMatchException(MethodArgumentTypeMismatchException ex){
         return  ResponseEntity.badRequest().body(ex.getMessage());
     }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<?> handleConstraintViolationException(ConstraintViolationException ex){
+        return ResponseEntity.badRequest().body(ex.getMessage());
+    }
+
     @ExceptionHandler(AlreadyRegisteredException.class)
     public ResponseEntity<?> handlingAlreadyRegisteredException(AlreadyRegisteredException ex){
-        return ResponseEntity.status(HttpStatus.CONFLICT).body("Duplicate Registration found");
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
     }
 
     @ExceptionHandler(UserNotFoundException.class)
@@ -35,11 +43,16 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(DuplicateEmailException.class)
     public ResponseEntity<?> handlingDuplicateEmail(DuplicateEmailException ex){
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Already Registered Email");
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
     }
 
     @ExceptionHandler(AccountBlockedException.class)
     public ResponseEntity<?> handlingAccountBlockedException(AccountBlockedException ex){
-        return  ResponseEntity.badRequest().body(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<?> handleBadCredentialsException(BadCredentialsException ex) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
     }
 }

@@ -1,6 +1,7 @@
 package com.project.auth_Service.service;
 
 import com.project.auth_Service.model.UserEntity;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -62,5 +63,22 @@ public class JWTUtil {
 
     public boolean validateToken(String token, String username) {
         return extractUserName(token).equals(username) && !isTokenExpired(token);
+    }
+
+
+    public String extractRole(String token) {
+        return getClaims(token).get("role", String.class);
+    }
+
+    public Integer extractUserId(String token) {
+        Number value = getClaims(token).get("userId", Number.class);
+        return value == null ? null : value.intValue();
+    }
+    private Claims getClaims(String token) {
+        return Jwts.parser()
+                .verifyWith(key)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
     }
 }

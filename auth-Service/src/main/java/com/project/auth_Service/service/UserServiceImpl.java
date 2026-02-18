@@ -7,6 +7,7 @@ import com.project.auth_Service.dto.UserRequestDto;
 import com.project.auth_Service.dto.UserResponseDto;
 import com.project.auth_Service.exception.AccountBlockedException;
 import com.project.auth_Service.exception.AlreadyRegisteredException;
+import com.project.auth_Service.exception.DuplicateEmailException;
 import com.project.auth_Service.exception.UserNotFoundException;
 import com.project.auth_Service.model.AccountStatus;
 import com.project.auth_Service.model.Role;
@@ -14,6 +15,7 @@ import com.project.auth_Service.model.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,17 +44,24 @@ public class UserServiceImpl implements UserService {
     // ================= REGISTER =================
     @Override
     public UserResponseDto registerUser(UserRequestDto requestDto) {
+        String normalizedName = requestDto.getName().trim();
+        String normalizedEmail = requestDto.getEmail().trim().toLowerCase();
 
-        UserEntity fetched = userRepository.findByName(requestDto.getName());
+        UserEntity fetched = userRepository.findByName(normalizedName);
         if (fetched != null) {
             throw new AlreadyRegisteredException(
                     "Duplicate registration found with this username"
             );
         }
 
+        UserEntity fetchedByEmail = userRepository.findByEmail(normalizedEmail);
+        if (fetchedByEmail != null) {
+            throw new DuplicateEmailException("Email already registered");
+        }
+
         UserEntity user = new UserEntity();
-        user.setName(requestDto.getName());
-        user.setEmail(requestDto.getEmail());
+        user.setName(normalizedName);
+        user.setEmail(normalizedEmail);
         user.setPassword(passwordEncoder.encode(requestDto.getPassword()));
         user.setRole(Role.USER);
         user.setAccountStatus(AccountStatus.ACTIVE);
@@ -117,7 +126,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void changePrivilageToEmployer(Integer userId) {
+    public void changePrivilageRequest(@AuthenticationPrincipal Integer userId) {
         UserEntity user=userRepository.findById(userId).orElseThrow(()->
                 new UserNotFoundException("No user Found with this Id"));
         NotificationDto notification=new NotificationDto();
@@ -128,6 +137,15 @@ public class UserServiceImpl implements UserService {
                 "user Name"+user.getName()+"\n"+"userId"+user.getUserId());
         feignClient.sendEmail(notification);
 
+    }
+
+    @Override
+    public UserResponseDto updatePrivilage(Integer userId) {
+        UserEntity user=userRepository.findById(userId).orElseThrow(()->
+                new UserNotFoundException("The user is not Found"));
+        user.setRole(Role.EMPLOYER);
+        userRepository.save(user);
+        return mapToDto(user);
     }
 
     // ================= BLOCK ACCOUNT =================

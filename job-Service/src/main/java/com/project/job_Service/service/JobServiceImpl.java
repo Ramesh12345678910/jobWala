@@ -1,7 +1,5 @@
 package com.project.job_Service.service;
 
-
-import com.project.job_Service.client.AuthFeignClient;
 import com.project.job_Service.dto.JobRequestDto;
 import com.project.job_Service.dto.JobResponseDto;
 import com.project.job_Service.entity.JobEntity;
@@ -10,29 +8,15 @@ import com.project.job_Service.exception.NotHavePrivilageException;
 import com.project.job_Service.repository.JobRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-
 import java.util.List;
 
 @Service
 public class JobServiceImpl implements JobService {
-
-
-
     @Autowired
     private JobRepository jobRepository;
 
-    @Autowired
-    private AuthFeignClient authFeignClient;
-
     @Override
     public JobResponseDto createJob(Integer employerId, JobRequestDto dto) {
-
-        Boolean isEmployer = authFeignClient.isEmployer(employerId);
-        if (!Boolean.TRUE.equals(isEmployer)) {
-            throw new NotHavePrivilageException("Only employer can create jobs");
-        }
-
         JobEntity job = new JobEntity();
         job.setEmployer_id(employerId);
         job.setTitle(dto.getTitle());
