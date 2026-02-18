@@ -32,6 +32,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> handilingUserNotFoundException(UserNotFoundException ex){
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User Not Found");
     }
+
+    @ExceptionHandler(DuplicateEmailException.class)
+    public ResponseEntity<?> handlingDuplicateEmail(DuplicateEmailException ex){
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Already Registered Email");
+    }
+
     @ExceptionHandler(AccountBlockedException.class)
     public ResponseEntity<?> handlingAccountBlockedException(AccountBlockedException ex){
         return  ResponseEntity.badRequest().body(ex.getMessage());

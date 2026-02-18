@@ -16,4 +16,5 @@ public class UserDto {
     private Integer userId;
     @NotEmpty(message = "role should not be empty")
     private String role;
+
 }

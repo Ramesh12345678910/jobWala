@@ -3,9 +3,8 @@ package com.project.application_Service.service;
 
 import com.project.application_Service.client.AuthClient;
 import com.project.application_Service.client.JobClient;
-import com.project.application_Service.dto.ApplicationRequestDto;
-import com.project.application_Service.dto.ApplicationResponseDto;
-import com.project.application_Service.dto.JobDto;import com.project.application_Service.dto.UserDto;
+import com.project.application_Service.client.NotificationFeignClient;
+import com.project.application_Service.dto.*;
 import com.project.application_Service.exception.ApplicationNotFoundException;import com.project.application_Service.exception.JobNotFoundException;import com.project.application_Service.exception.NotHavePrivilageException;import com.project.application_Service.exception.UserNotFoundException;import com.project.application_Service.model.ApplicationEntity;import com.project.application_Service.model.ApplicationStatus;import com.project.application_Service.repository.ApplicationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,6 +13,10 @@ import org.springframework.transaction.annotation.Transactional;import java.time
 @Service
 @Transactional
 public class ApplicationServiceImpl implements ApplicationService {
+
+
+    @Autowired
+    private NotificationFeignClient notificationFeignClient;
 
     @Autowired
     private ApplicationRepository applicationRepository;
@@ -51,6 +54,12 @@ public class ApplicationServiceImpl implements ApplicationService {
         application.setAppliedDate(LocalDate.now());
         application.setEmployerId(job.getEmployerId());
         applicationRepository.save(application);
+        NotificationDto notification=new NotificationDto();
+        notification.setTo("palisettibhaskarrameshsai@gmail.com");
+        notification.setSubject("Job Application");
+        notification.setBody("successfully applied for the following job"+"\n"
+        +"job title:"+job.getTitle()+"\n"+"description:"+job.getDescription());
+        notificationFeignClient.sendEmail(notification);
         return mapToDto(application);
     }
 
@@ -115,6 +124,13 @@ public class ApplicationServiceImpl implements ApplicationService {
 
         application.setApplicationStatus(requestDto.getApplicationStatus());
         applicationRepository.save(application);
+        NotificationDto notification=new NotificationDto();
+        notification.setTo("palisettibhaskarrameshsai@gmail.com");
+        notification.setSubject("Application Update");
+        notification.setBody("Your application status is updated:"+"\n"
+                +"job title:"+job.getTitle()+"\n"+"description:"+job.getDescription()+
+                "\n"+"Application Status:"+application.getApplicationStatus());
+        notificationFeignClient.sendEmail(notification);
 
         return mapToDto(application);
     }

@@ -54,13 +54,14 @@
 
 
 		<modules>
-		<module>api-Gateway</module>
-		<module>application-Service</module>
-		<module>auth-Service</module>
-		<module>job-Service</module>
-		<module>config-server</module>
-		<module>profile-Service</module>
-		<module>service-Registry</module>
+		    <module>api-Gateway</module>
+		    <module>application-Service</module>
+			<module>auth-Service</module>
+			<module>job-Service</module>
+		    <module>config-server</module>
+		    <module>profile-Service</module>
+		    <module>service-Registry</module>
+			<module>notification-Service</module>
 	</modules>
 
 </project>

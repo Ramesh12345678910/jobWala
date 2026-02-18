@@ -63,4 +63,10 @@ public class UserController {
         return new ResponseEntity<>(userService.getUserById(userId),HttpStatus.OK);
     }
 
+    @PostMapping("/request")
+    public ResponseEntity<?> requestAdmin(@PathVariable Integer userId){
+        userService.changePrivilageToEmployer(userId);
+        return new ResponseEntity<>("Your Request Has been Sent Successfully",HttpStatus.OK);
+    }
+
 }

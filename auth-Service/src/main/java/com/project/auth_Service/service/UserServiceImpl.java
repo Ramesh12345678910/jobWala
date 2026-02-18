@@ -1,6 +1,8 @@
 package com.project.auth_Service.service;
 
 import com.project.auth_Service.Repository.UserRepository;
+import com.project.auth_Service.client.NotificationFeignClient;
+import com.project.auth_Service.dto.NotificationDto;
 import com.project.auth_Service.dto.UserRequestDto;
 import com.project.auth_Service.dto.UserResponseDto;
 import com.project.auth_Service.exception.AccountBlockedException;
@@ -32,6 +34,9 @@ public class UserServiceImpl implements UserService {
     private AuthenticationManager authenticationManager;
 
     @Autowired
+    private NotificationFeignClient feignClient;
+
+    @Autowired
     private JWTUtil jwtUtil;
 
     // ================= REGISTER =================
@@ -49,10 +54,16 @@ public class UserServiceImpl implements UserService {
         user.setName(requestDto.getName());
         user.setEmail(requestDto.getEmail());
         user.setPassword(passwordEncoder.encode(requestDto.getPassword()));
-        user.setRole(Role.ADMIN);
+        user.setRole(Role.USER);
         user.setAccountStatus(AccountStatus.ACTIVE);
 
         UserEntity savedUser = userRepository.save(user);
+        NotificationDto email=new NotificationDto();
+        email.setTo(user.getEmail());
+        email.setSubject("Welcome To JobWala");
+        email.setBody("Your registration completed Successfully." +
+                "Wishing You a Great Journey Ahead!.");
+        feignClient.sendEmail(email);
         return mapToDto(savedUser);
     }
 
@@ -105,6 +116,20 @@ public class UserServiceImpl implements UserService {
         return mapToDto(user);
     }
 
+    @Override
+    public void changePrivilageToEmployer(Integer userId) {
+        UserEntity user=userRepository.findById(userId).orElseThrow(()->
+                new UserNotFoundException("No user Found with this Id"));
+        NotificationDto notification=new NotificationDto();
+        notification.setTo("palisettibhaskarrameshsai@gmail.com");
+        notification.setSubject("Role Changing Privilage");
+        notification.setBody("Iam the user please I working in a company please update my " +
+                "privilage to an employer."+"\n"+
+                "user Name"+user.getName()+"\n"+"userId"+user.getUserId());
+        feignClient.sendEmail(notification);
+
+    }
+
     // ================= BLOCK ACCOUNT =================
     @Override
     @Transactional
@@ -124,6 +149,11 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() ->
                         new UserNotFoundException("User Not Found with this userId"));
         user.setAccountStatus(AccountStatus.ACTIVE);
+        NotificationDto notification=new NotificationDto();
+        notification.setSubject("Account Activated");
+        notification.setTo(user.getEmail());
+        notification.setBody("Your account has been Activated.");
+        feignClient.sendEmail(notification);
         return mapToDto(user);
     }
 
