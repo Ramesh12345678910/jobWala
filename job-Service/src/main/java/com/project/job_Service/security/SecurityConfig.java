@@ -25,6 +25,9 @@ public class SecurityConfig {
         return http.csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(request -> request
+                        .requestMatchers("/v3/api-docs/**",
+                                "/swagger-ui/**",
+                                "/swagger-ui.html").permitAll()
                         .requestMatchers(HttpMethod.POST, "/job/create").hasRole("EMPLOYER")
                         .requestMatchers(HttpMethod.PUT, "/job/*").hasRole("EMPLOYER")
                         .requestMatchers(HttpMethod.DELETE, "/job/*").hasRole("EMPLOYER")

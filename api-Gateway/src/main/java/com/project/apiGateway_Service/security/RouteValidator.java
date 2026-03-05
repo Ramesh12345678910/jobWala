@@ -13,7 +13,12 @@ public class RouteValidator {
     private static final List<Pattern> OPEN_PATTERNS = List.of(
             Pattern.compile("^/user/register$"),
             Pattern.compile("^/user/login$"),
-            Pattern.compile("^/user/\\d+/exists$")
+            Pattern.compile("^/user/\\d+/exists$"),
+
+            // Swagger endpoints
+            Pattern.compile("^/v3/api-docs.*"),
+            Pattern.compile("^/swagger-ui.*"),
+            Pattern.compile("^/[a-z-]+/v3/api-docs.*")
     );
 
     public final Predicate<ServerHttpRequest> isSecured =
