@@ -40,6 +40,8 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private JWTUtil jwtUtil;
+    @Autowired
+    private KafkaProducerService kafkaProducerService;
 
     // ================= REGISTER =================
     @Override
@@ -72,7 +74,7 @@ public class UserServiceImpl implements UserService {
         email.setSubject("Welcome To JobWala");
         email.setBody("Your registration completed Successfully." +
                 "Wishing You a Great Journey Ahead!.");
-        feignClient.sendEmail(email);
+        kafkaProducerService.sendNotification(email);
         return mapToDto(savedUser);
     }
 
